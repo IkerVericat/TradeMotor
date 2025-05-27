@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ coche.marca }} {{ coche.modelo }}</title>
+    <link rel="stylesheet" href="../static/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top w-100">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('index') }}">TradeMotor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if 'user_id' in session %}
+                        <li class="nav-item"><span class="nav-link">👋🏻 Hola, {{ session['nombre'] }}</span></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('ventas') }}">Ventas</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('mis_compras') }}">Mis Compras</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('favoritos') }}">Favoritos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}">Registrarse</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Iniciar sesión</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1>{{ coche.marca }} {{ coche.modelo }}</h1>
+
+        <img src="../static/images/{{ coche.id }}.jpg" alt="Imagen de {{ coche.marca }} {{ coche.modelo }}" class="img-fluid mb-4">
+
+       <p><strong>Tipo:</strong> {{ coche.tipo }}</p>
+        <p><strong>Precio:</strong> {{ coche.precio }} €</p>
+        <p><strong>Año:</strong> {{ coche.anyo }}</p>
+
+        <!-- Datos específicos para coches eléctricos -->
+        {% if coche.tipo == "electrico" %}
+            <p><strong>Autonomía:</strong> {{ coche.autonomia }} km</p>
+            <p><strong>Tiempo de carga:</strong> {{ coche.tiempo_carga }} horas</p>
+            <p><strong>Capacidad de batería:</strong> {{ coche.capacidad_bateria }} kWh</p>
+        {% endif %}
+
+        <!-- Datos específicos para coches híbridos -->
+        {% if coche.tipo == "hibrido" %}
+            <p><strong>Autonomía:</strong> {{ coche.autonomia }} km</p>
+            <p><strong>Tipo de híbrido:</strong> {{ coche.tipo_hibrido }}</p>
+            <p><strong>Consumo mixto:</strong> {{ coche.consumo_mixto }} L/100km</p>
+        {% endif %}
+
+        <h3>Historial de Precios 📈</h3>
+        {% if historial_precios %}
+            <ul>
+                {% for registro in historial_precios %}
+                    <li>{{ registro.data }} → {{ registro.preu }} €</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">No hay historial de precios disponible.</p>
+        {% endif %}
+
+        <h3>Comentarios 🗣️</h3>
+        {% if comentarios %}
+            <ul>
+                {% for comentario in comentarios %}
+                    <li><strong>Usuario {{ comentario.usuario_id }}</strong>: {{ comentario.texto }} ({{ comentario.fecha }})</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">No hay comentarios para este coche.</p>
+        {% endif %}
+
+        <a href="{{ url_for('anuncios') }}" class="btn btn-secondary mt-3">Volver</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

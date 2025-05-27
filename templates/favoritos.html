@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Favoritos</title>
+    <link rel="stylesheet" href="../static/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top w-100">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('index') }}">TradeMotor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if 'user_id' in session %}
+                        <li class="nav-item"><span class="nav-link">👋🏻 Hola, {{ session['nombre'] }}</span></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('ventas') }}">Ventas</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('mis_compras') }}">Mis Compras</a></li>
+                        <li class="nav-item"><a class="nav-link {% if active_page == 'favoritos' %}text-primary{% endif %}" href="{{ url_for('favoritos') }}">Favoritos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}">Registrarse</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Iniciar sesión</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 100px;">
+        <h1 class="mb-4">Mis favoritos</h1>
+
+        {% if anuncios %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for anuncio in anuncios %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ anuncio.marca }} {{ anuncio.modelo }}</h5>
+                                <p class="card-text">
+                                    <strong>Tipo:</strong> {{ anuncio.tipo }}<br>
+                                    <strong>Precio:</strong> {{ anuncio.precio }} €<br>
+                                    <strong>Año:</strong> {{ anuncio.anyo }}<br>
+                                    {% if anuncio.en_oferta %}
+                                        <span class="badge bg-success mt-2">🚀 Superoferta 21% de descuento</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between">
+                                <form action="{{ url_for('eliminar_favorito', anuncio_id=anuncio.id) }}" method="POST">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">❌ Eliminar</button>
+                                </form>
+                                <form action="{{ url_for('hacer_oferta', anuncio_id=anuncio.id) }}" method="GET">
+                                    <button type="submit" class="btn btn-success btn-sm">💬 Hacer oferta</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">No tienes anuncios guardados como favoritos.</div>
+        {% endif %}
+    </div>
+    
+    <div style="height: 80px;"></div>
+    <div class="mt-4 d-flex justify-content-start">
+        <button class="btn btn-secondary" style="min-width: 220px;" onclick="window.location.href='/'">
+            Volver a la página principal
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" 
+            integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" 
+            crossorigin="anonymous">
+    </script>
+
+</body>
+</html>

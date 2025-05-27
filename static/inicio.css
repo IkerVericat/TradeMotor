@@ -1,0 +1,93 @@
+/* Importación de la fuente */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* Cuerpo general */
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    background: linear-gradient(to right, #001f3f, #0072ff);
+    text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.6);
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* Título principal */
+h1 {
+    text-align: center;
+    font-size: 4em !important;
+    margin-bottom: 200px !important;
+    text-shadow: 2px 2px 15px rgba(0, 183, 255, 0.6);
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Contenedor del contenido */
+.container {
+    max-width: 800px !important;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Botones de inicio */
+.container a button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 15px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 183, 255, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efectos neón en los botones */
+.container a button::before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 10%, transparent 70%);
+    transition: all 0.4s ease-in-out;
+}
+
+/* Efecto hover */
+.container a button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 183, 255, 0.5);
+}
+
+.container a button:hover::before {
+    top: 0;
+    left: 0;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Anuncios</title>
+    <link rel="stylesheet" href="../static/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top w-100">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('index') }}">TradeMotor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if 'user_id' in session %}
+                        <li class="nav-item"><span class="nav-link">👋🏻 Hola, {{ session['nombre'] }}</span></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('ventas') }}">Ventas</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('mis_compras') }}">Mis Compras</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('favoritos') }}">Favoritos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('registro') }}">Registrarse</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Iniciar sesión</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container" style="margin-top: 100px;">
+        <h1 class="mb-4">Lista de anuncios</h1>
+
+        <!-- Filtro -->
+        <form method="GET" action="{{ url_for('anuncios') }}" class="mb-4">
+            <div class="row g-2">
+                <div class="col-md-2">
+                    <input type="text" name="marca" class="form-control" placeholder="Marca" value="{{ request.args.get('marca', '') }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="modelo" class="form-control" placeholder="Modelo" value="{{ request.args.get('modelo', '') }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="precio_max" class="form-control" placeholder="Precio máximo (€)" value="{{ request.args.get('precio_max', '') }}" step="any">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="anyo" class="form-control" placeholder="Año" value="{{ request.args.get('anyo', '') }}">
+                </div>
+                <div class="col-md-2">
+                    <select name="tipo" class="form-select" id="tipoFiltro" onchange="mostrarFiltrosAvanzados()">
+                        <option value="">Tipo</option>
+                        <option value="electrico" {% if request.args.get('tipo') == 'electrico' %}selected{% endif %}>Eléctrico</option>
+                        <option value="hibrido" {% if request.args.get('tipo') == 'hibrido' %}selected{% endif %}>Híbrido</option>
+                        <option value="gasolina" {% if request.args.get('tipo') == 'gasolina' %}selected{% endif %}>Gasolina</option>
+                        <option value="diesel" {% if request.args.get('tipo') == 'diesel' %}selected{% endif %}>Diésel</option>
+                    </select>
+                </div>
+                <!-- Filtros avanzados eléctricos -->
+                <div class="col-md-2 filtros-avanzados-electricos" style="display:none;">
+                    <input type="number" name="autonomia_min_electrico" class="form-control" placeholder="Autonomía mínima (km)" value="{{ request.args.get('autonomia_min_electrico', '') }}" step="any">
+                </div>
+                <div class="col-md-2 filtros-avanzados-electricos" style="display:none;">
+                    <input type="number" name="tiempo_carga_max" class="form-control" placeholder="Tiempo carga máx (h)" value="{{ request.args.get('tiempo_carga_max', '') }}" step="any">
+                </div>
+                <div class="col-md-2 filtros-avanzados-electricos" style="display:none;">
+                    <input type="number" name="capacidad_bateria" class="form-control" placeholder="Capacidad batería (kWh)" value="{{ request.args.get('capacidad_bateria', '') }}" step="any">
+                </div>
+                <!-- Filtros avanzados híbridos -->
+                <div class="col-md-2 filtros-avanzados-hibridos" style="display:none;">
+                    <input type="number" name="autonomia_min_hibrido" class="form-control" placeholder="Autonomía mínima (km)" value="{{ request.args.get('autonomia_min_hibrido', '') }}" step="any">
+                </div>
+                <div class="col-md-2 filtros-avanzados-hibridos" style="display:none;">
+                    <input type="text" name="tipo_hibrido" class="form-control" placeholder="Tipo de híbrido" value="{{ request.args.get('tipo_hibrido', '') }}">
+                </div>
+                <div class="col-md-2 filtros-avanzados-hibridos" style="display:none;">
+                    <input type="number" name="consumo_mixto_max" class="form-control" placeholder="Consumo mixto máx (L/100km)" value="{{ request.args.get('consumo_mixto_max', '') }}" step="any">
+                </div>
+                <div class="col-md-2 d-flex align-items-center">
+                    <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                </div>
+            </div>
+        </form>
+
+
+        <!-- Lista de anuncios -->
+        {% if anuncios %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for anuncio in anuncios %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm clickable-card" data-bs-toggle="modal" data-bs-target="#modalCoche{{ anuncio.id }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ anuncio.marca }} {{ anuncio.modelo }}</h5>
+                                <p class="card-text">
+                                    <strong>Tipo:</strong> {{ anuncio.tipo }}<br>
+                                    <strong>Precio:</strong> {{ anuncio.precio }} €<br>
+                                    <strong>Año:</strong> {{ anuncio.anyo }}<br>
+                                    {% if anuncio.en_oferta %}
+                                        <span class="badge bg-success mt-2">🚀 Superoferta 21% de descuento</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between">
+                                <form action="{{ url_for('añadir_favorito') }}" method="POST">
+                                    <input type="hidden" name="anuncio_id" value="{{ anuncio.id }}">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" title="Añadir a favoritos">❤️</button>
+                                </form>
+                                <form action="{{ url_for('hacer_oferta', anuncio_id=anuncio.id) }}" method="GET">
+                                    <button type="submit" class="btn btn-success btn-sm" data-bs-toggle="tooltip" title="Hacer una oferta">Hacer Oferta 💬</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+        {% else %}
+            <div class="alert alert-info">No hay anuncios publicados.</div>
+        {% endif %}
+
+        <!-- Modales para cada anuncio -->
+
+        {% for anuncio in anuncios %}
+        <div class="modal fade" id="modalCoche{{ anuncio.id }}" tabindex="-1" aria-labelledby="modalLabel{{ anuncio.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel{{ anuncio.id }}">{{ anuncio.marca }} {{ anuncio.modelo }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Tipo:</strong> {{ anuncio.tipo }}</li>
+                                <li class="list-group-item"><strong>Año:</strong> {{ anuncio.anyo }}</li>
+                                <li class="list-group-item"><strong>Precio:</strong> {{ anuncio.precio }} €</li>
+                                {% if anuncio.kilometraje %}
+                                    <li class="list-group-item"><strong>Kilometraje:</strong> {{ anuncio.kilometraje }} km</li>
+                                {% endif %}
+                                
+                                <!-- Datos para coches eléctricos -->
+                                {% if anuncio.tipo == "electrico" %}
+                                    <li class="list-group-item"><strong>Autonomía:</strong> {{ anuncio.autonomia }} km</li>
+                                    <li class="list-group-item"><strong>Tiempo de carga:</strong> {{ anuncio.tiempo_carga }} horas</li>
+                                    <li class="list-group-item"><strong>Capacidad de batería:</strong> {{ anuncio.capacidad_bateria }} kWh</li>
+                                    <li class="list-group-item"></li>
+                                {% endif %}
+
+                                <!-- Datos para coches híbridos -->
+                                {% if anuncio.tipo == "hibrido" %}
+                                    <li class="list-group-item"><strong>Autonomía:</strong> {{ anuncio.autonomia }} km</li>
+                                    <li class="list-group-item"><strong>Tipo de híbrido:</strong> {{ anuncio.tipo_hibrido }}</li>
+                                    <li class="list-group-item"><strong>Consumo mixto:</strong> {{ anuncio.consumo_mixto }} L/100km</li>
+                                    <li class="list-group-item"></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+
+                            <div class="col-md-6">
+                                {% if anuncio.imagen_url %}
+                                    <div id="carousel{{ anuncio.id }}" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner">
+                                            {% for imagen in anuncio.imagen_url.split(',') %}
+                                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                                <img src="{{ url_for('static', filename=imagen.strip()) }}" class="d-block w-100 rounded" alt="Imagen coche">
+                                            </div>
+                                        {% endfor %}
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ anuncio.id }}" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Anterior</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ anuncio.id }}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Siguiente</span>
+                                        </button>
+                                    </div>
+                                {% else %}
+                                    <img src="../static/images/default.jpg" alt="Imagen no disponible" class="img-fluid rounded">
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <h6>Historial de precios:</h6>
+                        {% if historial_por_coche[anuncio.id] %}
+                        <ul class="list-group mb-4">
+                            {% for registro in historial_por_coche[anuncio.id] %}
+                            <li class="list-group-item">
+                                <strong>{{ registro.fecha }}</strong>: {{ registro.precio }} €
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">No hay historial de precios disponible.</p>
+                        {% endif %}
+                        
+                        <h6>Comentarios:</h6>
+                        {% if comentarios_por_anuncio[anuncio.id] %}
+                        <ul class="list-group mb-3">
+                            {% for comentario in comentarios_por_anuncio[anuncio.id] %}
+                            <li class="list-group-item">
+                                <strong>{{ comentario.nombre_usuario }}</strong>: {{ comentario.texto }} ({{ comentario.fecha }})
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">Este anuncio aún no tiene comentarios.</p>
+                        {% endif %}
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mt-4 mb-4"></div> <!-- Estos div los uso para crear espacios y mejorar la estética de la página -->
+
+    <!-- Botones debajo del formulario -->
+    <div class="mt-auto d-flex justify-content-left gap-3 py-2">
+        <button class="btn btn-secondary w-25" onclick="window.location.href='/publicar'">Publicar un nuevo anuncio</button>
+        <button class="btn btn-secondary w-25" onclick="window.location.href='/'">Volver a la página principal</button>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+        crossorigin="anonymous"></script>
+
+    <!-- Script para tooltips -->
+    <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    </script>
+    <script>
+function mostrarFiltrosAvanzados() {
+    var tipo = document.getElementById('tipoFiltro').value;
+    // Oculta todos los filtros avanzados
+    document.querySelectorAll('.filtros-avanzados-electricos').forEach(function(el) {
+        el.style.display = 'none';
+        el.querySelectorAll('input').forEach(function(input) { input.disabled = true; });
+    });
+    document.querySelectorAll('.filtros-avanzados-hibridos').forEach(function(el) {
+        el.style.display = 'none';
+        el.querySelectorAll('input').forEach(function(input) { input.disabled = true; });
+    });
+    // Muestra y habilita los que correspondan
+    if (tipo === 'electrico') {
+        document.querySelectorAll('.filtros-avanzados-electricos').forEach(function(el) {
+            el.style.display = '';
+            el.querySelectorAll('input').forEach(function(input) { input.disabled = false; });
+        });
+    }
+    if (tipo === 'hibrido') {
+        document.querySelectorAll('.filtros-avanzados-hibridos').forEach(function(el) {
+            el.style.display = '';
+            el.querySelectorAll('input').forEach(function(input) { input.disabled = false; });
+        });
+    }
+}
+document.addEventListener('DOMContentLoaded', mostrarFiltrosAvanzados);
+</script>
+    
+</body>
+</html>
+

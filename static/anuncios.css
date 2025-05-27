@@ -1,0 +1,211 @@
+/* ----- Importación de fuente ----- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* ----- Estilos generales ----- */
+body {  
+    font-family: 'Poppins', sans-serif; 
+    background: linear-gradient(135deg, #001f3f, #0056b3); 
+    color: white;  
+    margin: 0;  
+    padding: 40px 20px; /* Espacio extra en los laterales */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}  
+
+h1 {  
+    text-align: center;  
+    font-size: 3em;  
+    text-shadow: 2px 2px 15px rgba(0, 183, 255, 0.6); 
+    margin-bottom: 50px;  
+    animation: fadeIn 1s ease-in-out;
+}  
+
+/* ----- Contenedor del formulario de búsqueda ----- */
+.search-container {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin-bottom: 80px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    backdrop-filter: blur(8px);
+    border-radius: 10px;
+}
+
+.search-container label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.search-container input {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    outline: none;
+}
+
+.search-container button {
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background: #0072ff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.search-container button:hover {
+    background: #005bb5;
+}
+
+/* ----- Contenedor de anuncios ----- */
+.anuncios-container {
+    max-width: 800px;  
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);  
+    padding: 30px;  
+    border-radius: 15px;  
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* ----- Animación de aparición ----- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ----- Lista de anuncios ----- */
+ul {  
+    list-style: none;  
+    padding: 30px;  
+    margin: 0;
+}  
+
+li {  
+    background: rgba(255, 255, 255, 0.2); 
+    padding: 17px;  
+    margin: 15px 0;  
+    border-radius: 12px;  
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);  
+    transition: all 0.3s ease-in-out;  
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}  
+
+li:hover {  
+    transform: scale(1.03);  
+    box-shadow: 0 6px 15px rgba(0, 183, 255, 0.5);  
+    background: rgba(255, 255, 255, 0.3);  
+}
+
+/* ----- Estilo del texto de los anuncios ----- */
+li span {
+    font-weight: bold;
+    color: #00c6ff;
+}
+
+/* ----- Botones ----- */
+a {  
+    display: inline-block;  
+    padding: 12px 25px;  
+    color: white;  
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    text-decoration: none;  
+    border-radius: 10px;  
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;  
+    margin: 15px 8px;
+    box-shadow: 0 4px 15px rgba(0, 183, 255, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto neón a los botones */
+a::before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 10%, transparent 70%);
+    transition: all 0.4s ease-in-out;
+}
+
+a:hover {  
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 183, 255, 0.5);
+}
+
+a:hover::before {
+    top: 0;
+    left: 0;
+}
+
+/* ----- Contenedor de los enlaces ----- */
+.links-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+
+
+/* ----- Tabla de anuncios ----- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    margin-top: 30px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 183, 255, 0.3);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+th {
+    background-color: rgba(0, 183, 255, 0.2);
+    font-weight: bold;
+    color: #00c6ff;
+}
+
+tr:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: background-color 0.3s ease-in-out;
+}
+
+td {
+    font-size: 1rem;
+}
+
+/* Alternar filas para mejor legibilidad */
+tbody tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05);
+}

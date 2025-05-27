@@ -1,0 +1,259 @@
+/* ----- Importació de font ----- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* ----- Estilos generales ----- */
+body {
+    font-family: 'Poppins', sans-serif; 
+    background: linear-gradient(135deg, #001f3f, #0056b3); 
+    color: rgb(251, 251, 251) !important;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background-color 0.3s;
+    min-height: 100vh;
+}
+
+
+h1 {  
+    text-align: center;  
+    font-size: 3em;  
+    text-shadow: 2px 2px 15px rgba(0, 183, 255, 0.6); 
+    margin-bottom: 20px;  
+    animation: fadeIn 1s ease-in-out;
+}  
+
+/* ----- Animación de entrada ----- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ----- Contenedor del formulario ----- */  
+.container {  
+    max-width: 700px;  
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);  
+    padding: 30px;  
+    border-radius: 15px;  
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeIn 0.8s ease-in-out; 
+    flex-grow: 1;
+}  
+
+form {  
+    padding: 30px;  
+    border-radius: 10px;  
+    transition: box-shadow 0.3s;
+}  
+
+form:hover {  
+    box-shadow: 0 12px 40px rgba(0, 183, 255, 0.5);  
+}  
+
+/* ----- Estilo de los campos del formulario ----- */  
+input[type="text"],  
+input[type="number"], 
+input[type="password"],
+input[type="email"],
+select,
+button {  
+    width: 100%;  
+    padding: 15px;  
+    margin: 10px 0;  
+    border: 2px solid #004aad;  
+    border-radius: 5px;  
+    box-sizing: border-box;  
+    font-size: 1rem;  
+    transition: border-color 0.3s, box-shadow 0.3s;
+}  
+
+input[type="checkbox"] {
+    margin-bottom: 15px; /* 🔹 Espacio debajo del checkbox */
+}
+
+
+input[type="text"]:focus,  
+input[type="number"]:focus, 
+input[type="password"]:focus,
+input[type="email"]:focus, 
+select:focus {  
+    border-color: #00c6ff;  
+    box-shadow: 0 0 5px rgba(0, 183, 255, 0.5);  
+    outline: none;  
+}  
+
+/* ----- Estilo del botón ----- */  
+button {  
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;  
+    font-size: 1.1rem;  
+    cursor: pointer;  
+    border: none;  
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+}  
+
+button::before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 10%, transparent 70%);
+    transition: all 0.4s ease-in-out;
+}  
+
+button:hover {  
+    transform: scale(1.05);  
+    box-shadow: 0 6px 20px rgba(0, 183, 255, 0.5);
+}  
+
+button:hover::before {
+    top: 0;
+    left: 0;
+}  
+
+/* ----- Estilos de las secciones ----- */  
+h2 {  
+    color: #00c6ff;  
+    border-bottom: 3px solid #0072ff;  
+    padding-bottom: 8px;  
+    margin-top: 30px;  
+    animation: slideIn 0.5s;  
+}  
+
+@keyframes slideIn {  
+    from {  
+        transform: translateY(-10px);  
+        opacity: 0;  
+    }  
+    to {  
+        transform: translateY(0);  
+        opacity: 1;  
+    }  
+}  
+
+/* ----- Estilos para mostrar resultados ----- */  
+#resultats {  
+    margin-top: 20px;  
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;  
+    border-radius: 10px;  
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);  
+    backdrop-filter: blur(8px);
+}  
+
+#resultats div {  
+    padding: 10px;  
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);  
+    transition: background-color 0.3s;
+}
+
+/* ----- Estilos de los botones ----- */
+.back-link, .publish-btn {    
+    display: inline-block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: white;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    box-shadow: 0 6px 20px rgba(0, 183, 255, 0.5);
+    padding: 12px 20px;
+    border-radius: 8px;
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-link:hover, .publish-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 183, 255, 0.5);
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+}
+
+.btn-estilizado {
+    display: inline-block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: white;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    box-shadow: 0 6px 20px rgba(0, 183, 255, 0.5);
+    padding: 12px 20px;
+    border-radius: 8px;
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    text-align: center;
+    margin-top: 20px;
+    border: none;
+    cursor: pointer;
+    
+}
+
+.btn-estilizado:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 183, 255, 0.5);
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+}
+
+.ventas-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* 🔹 Espacio uniforme entre los elementos */
+    justify-content: flex-start; /* Alinea los elementos sin espacios grandes */
+}
+
+.coche-card {
+    flex: 1;
+    min-width: 250px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    background-color: #f8f9fa;
+}
+
+.clickable-card {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.clickable-card:hover {
+    transform: scale(1.02);
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #222;
+    padding: 10px 0;
+    text-align: center;
+    display: none; /* 🔹 Ocultamos el footer al inicio */
+}
+
+select.form-select {
+    height: 55px; /* Igualar la altura con los inputs */
+    padding: 10px; /* Ajustar el padding */
+    border: 2px solid #004aad; /* Igualar el borde con los inputs */
+    margin-top: 10px; /* Baja el select */
+}
+
+
+
+
+
+
+
+
+
+

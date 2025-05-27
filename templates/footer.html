@@ -1,0 +1,20 @@
+
+    <footer class="footer bg-dark text-white text-center py-3 fixed-bottom">
+        <p class="mb-0">&copy; 2025 TradeMotor   -   by Iker Vericat Pastor</p>
+    </footer>
+
+
+    <script>
+    document.addEventListener("scroll", function() {
+        let footer = document.querySelector(".footer");
+        let scrollY = window.scrollY;
+        let pageHeight = document.documentElement.scrollHeight;
+        let windowHeight = window.innerHeight;
+
+        if (scrollY + windowHeight >= pageHeight - 10) { 
+                footer.style.display = "block";  /* 🔹 Aparece al llegar abajo */
+        } else {
+                footer.style.display = "none"; /* 🔹 Se oculta cuando el usuario no está al fondo */
+        }
+    });
+    </script>
